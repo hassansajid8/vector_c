@@ -18,7 +18,7 @@ dynamic, one-dimensional arrays that can store elements of the same data type
     - void vec_init(Vector* vec, VectorType type)
     - usage
 
-    ```bash
+    ```c
         Vector vector;
         vec_init(&vector, INT);
     ```
@@ -29,7 +29,7 @@ dynamic, one-dimensional arrays that can store elements of the same data type
     - the function expects the address (pointer) of the value. Strings can be passed within double quotes, but other types have to be stored in a variable and their address is to be passed to the function.
     - example usage
 
-    ```bash
+    ```c
         // have to store value in a variable and pass its address
         int num = 27;
         vec_append(&int_vector, &num);
@@ -44,8 +44,8 @@ dynamic, one-dimensional arrays that can store elements of the same data type
     - returned value has to be explicitly typecasted and dereferenced accordingly.
     - example usage
 
-    ```bash
-        printf("Integer value at index 16 = %d", \*(int*)vec_get(&vector, 16));
+    ```c
+        printf("Integer value at index 16 = %d", *(int*)vec_get(&vector, 16));
         printf("Value at index 24 = %s", (char*)vec_get(&vector, 24));
     ```
 
@@ -55,7 +55,7 @@ dynamic, one-dimensional arrays that can store elements of the same data type
     - In case of string, it reallocates memory everytime (as of now), which can affect performance on frequent updates.
     - example usage
 
-    ```bash 
+    ```c 
         int a = 27;
         vec_set(&vector, &a, 8);
     ```
@@ -66,7 +66,7 @@ dynamic, one-dimensional arrays that can store elements of the same data type
     - print format: { item1, item2, item3, }
     - example usage
 
-    ```bash
+    ```c
         vec_show(&vector);
     ```
 
@@ -75,7 +75,7 @@ dynamic, one-dimensional arrays that can store elements of the same data type
     - returns an integer, the number of items present in the vector.
     - example usage
 
-    ```bash
+    ```c
         int len = vec_getsize(&vector);
     ```
 
@@ -86,7 +86,7 @@ dynamic, one-dimensional arrays that can store elements of the same data type
     - Modern operating systems will cleanup any memory after program ends, but it's good style to manually free any memory you allocated.
     - example usage
 
-    ```bash
+    ```c
         vec_free(&vector);
     ```
 
