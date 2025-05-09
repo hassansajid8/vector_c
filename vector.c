@@ -14,6 +14,7 @@ static void __appendfloat(Vector*, float*);
 static void __appendchar(Vector*, char*);
 static void __appendstr(Vector*, char*);
 static void __resize(Vector*);
+static void __shrink(Vector*);
 
 void vec_init(Vector* vec, enum VectorType type){
     switch (type) {
@@ -218,6 +219,39 @@ void vec_set(Vector* vec, void* value, int index){
     return;
 }
 
+void vec_delete(Vector *vec, int index) {
+    if(index >= vec->__size){
+        printf("vec_delete(): Out of bounds\n\tProvided index is invalid\n");
+        return;
+    }
+
+    // free item at index 
+    if(vec->__type == STRING) {
+        free(((char**)vec->__arr)[index]);
+    }
+
+    // shift succeeding elements left
+    size_t type_size;
+    switch(vec->__type) {
+        case INT: type_size = sizeof(int); break;
+        case FLOAT: type_size = sizeof(float); break;
+        case CHAR: type_size = sizeof(char); break;
+        case STRING: type_size = sizeof(char*); break;
+        default: return;
+    }
+
+    for(int i=index;i<vec->__size;i++){
+        memcpy((char*)vec->__arr + i * type_size, (char*)vec->__arr + (i+1) * type_size, type_size);
+    }
+
+    vec->__size--;
+
+    // shrink array if memory underused
+    if(vec->__size < vec->__mem/2){
+        __shrink(vec);
+    }
+}
+
 static void __resize(Vector* vec){
     printf("$> Resizing vector\n");
 
@@ -233,27 +267,43 @@ static void __resize(Vector* vec){
     vec->__mem += BUFSIZE;
     void* temp = realloc(vec->__arr, vec->__mem * type_size);
     if (!temp) {
-        printf("Error: realloc failed during resize\n");
+        printf("$> Error: realloc failed during resize\n");
         return;
     }
 
     vec->__arr = temp;
 }
 
-void vec_free(Vector *vec) {
-    if(vec == NULL){
-        printf("$> Vector is null\n");
+static void __shrink(Vector *vec) {
+    printf("$> Initiating vector shrink\n");
+    size_t type_size;
+    switch(vec->__type) {
+        case INT: type_size = sizeof(int); break;
+        case FLOAT: type_size = sizeof(float); break;
+        case CHAR: type_size = sizeof(char); break;
+        case STRING: type_size = sizeof(char*); break;
+        default: return;
+    }
+
+    void *temp = realloc(vec->__arr, (vec->__mem - BUFSIZE) * type_size);
+    if(!temp) {
+        printf("$> Error shrinking, keeping old size\n");
         return;
     }
+
+    vec->__arr = temp;
+    vec->__mem -= BUFSIZE;
+}
+
+void vec_free(Vector *vec) {
+    if(vec == NULL) return;
     if(vec->__arr != NULL){
-        printf("\tvec->_arr not null\nFreeing _arr...\n");
         if(vec->__type == STRING) {
             for(int i=0;i<vec->__size;i++){
-                printf("\t\tFreeing string %s...\n", ((char**)vec->__arr)[i]);
                 free(((char**)vec->__arr)[i]);
             }
         }
         free(vec->__arr);
     }
-    printf("\tFreeing vec...\n");
+    printf("$> Freeing vec...\n");
 }

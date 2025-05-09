@@ -21,6 +21,7 @@ typedef struct Vector {
 //global functions
 void vec_init(Vector*, enum VectorType);
 void vec_append(Vector*, void*);
+void vec_delete(Vector*, int);
 void vec_show(Vector*);
 void* vec_get(Vector*, int);
 int vec_getsize(Vector*);

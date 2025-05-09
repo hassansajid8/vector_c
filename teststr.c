@@ -23,6 +23,14 @@ int main(){
     printf("size of list = %d\n", vec_getsize(&list));
     printf("element at index 9 = %s\n", (char*)vec_get(&list, 9));
 
+    vec_delete(&list, 5);
+
+    vec_show(&list);
+
+    for(int i=0; i<10;i++){
+        vec_delete(&list, i);
+    }
+
     vec_show(&list);
 
     vec_free(&list);
