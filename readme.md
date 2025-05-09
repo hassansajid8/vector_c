@@ -1,4 +1,5 @@
-# Vectors - a dynamic, one-dimensional array that can store elements of the same data type
+# Vectors
+### dynamic, one-dimensional arrays that can store elements of the same data type
 
 ## How to use
 - clone repo
